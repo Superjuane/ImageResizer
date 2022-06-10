@@ -2,11 +2,13 @@ import PySimpleGUI as sg
 import os.path
 import ImageResizer as ir
 
+def Warning (msg):
+    sg.Popup(msg, keep_on_top=True)
 
 file_list_column = [
     [
         sg.Text("Carpeta:"),
-        sg.In(size=(90, 1), enable_events=True, key="-FOLDER-"),
+        sg.In(size=(90, 1), enable_events=True, key="-FOLDER1-"),
         sg.FolderBrowse(),
     ],
     [
@@ -40,9 +42,10 @@ while True:
     if event == "Exit" or event == sg.WIN_CLOSED:
         break
 
-    if event == "-FOLDER-":
+    if event == "-FOLDER1-":
         print("folder")
-        folder = values["-FOLDER-"]
+        folder = values["-FOLDER1-"]
+        print(folder)
         try:
             print("try")
             # Get list of files in folder
@@ -62,11 +65,16 @@ while True:
         window["-FILE LIST-"].update(fnames)
 
     if event == 'Convierte la carpeta completa':
-        print("go")
+        try:
+            ir.imageResizer("a", "b")
+        except NameError:
+            Warning("Error: ")
+        # if folder == "":
+        #     Warning("empty")
     # elif event == "-FILE LIST-":  # A file was chosen from the listbox
     #     try:
     #         filename = os.path.join(
-    #             values["-FOLDER-"], values["-FILE LIST-"][0]
+    #             values["-FOLDER1-"], values["-FILE LIST-"][0]
     #         )
     #         window["-TOUT-"].update(filename)
     #         window["-IMAGE-"].update(filename=filename)
