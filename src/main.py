@@ -44,6 +44,7 @@ while True:
 
     if event == "-FOLDER1-":
         print("folder")
+        print (values["-FOLDER1-"])
         folder = values["-FOLDER1-"]
         print(folder)
         try:
@@ -58,7 +59,7 @@ while True:
             f
             for f in file_list
             if os.path.isfile(os.path.join(folder, f))
-                and f.lower().endswith((".jpeg", ".gif"))
+                and f.lower().endswith((".jpeg", ".gif", ".jpg", ".png"))
         ]
         for x in fnames:
             print(x)
@@ -66,19 +67,19 @@ while True:
 
     if event == 'Convierte la carpeta completa':
         try:
-            ir.imageResizer("a", "b")
+            ir.imageResizerFolder(values["-FOLDER1-"], "b")
         except NameError:
-            Warning("Error: ")
-        # if folder == "":
-        #     Warning("empty")
-    # elif event == "-FILE LIST-":  # A file was chosen from the listbox
-    #     try:
-    #         filename = os.path.join(
-    #             values["-FOLDER1-"], values["-FILE LIST-"][0]
-    #         )
-    #         window["-TOUT-"].update(filename)
-    #         window["-IMAGE-"].update(filename=filename)
-    #     except:
-    #         pass
+            Warning("Error: No se ha seleccionado ninguna carpeta a procesar")
+
+
+    elif event == "-FILE LIST-":  # A file was chosen from the listbox
+
+        try:
+            ir.imageResizerFile(values["-FILE LIST-"][0], values["-FOLDER1-"])
+            print("Path: " + values["-FOLDER1-"])
+            print("file: " + values["-FILE LIST-"][0])
+
+        except NameError:
+            Warning("Error: No se ha seleccionado ninguna foto a convertir")
 
 window.close()
