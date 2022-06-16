@@ -1,3 +1,7 @@
+# To install:
+# pyinstaller --noconfirm --onedir --windowed --icon "C:/Users/Juane Olivan/Documents/Eugenialazaro.com/repositorioImagenes/sol.ico" --name "PreparadorDeImagenes" --upx-dir "C:/Users/Juane Olivan/Documents/Eugenialazaro.com/pythonProject/src" --add-data "C:/Users/Juane Olivan/Documents/Eugenialazaro.com/pythonProject/src/ImageResizer.py;." --paths "C:/Python39/lib/site-packages" --paths "C:/Users/Juane Olivan/Documents/Eugenialazaro.com/ImagePreparatorPython/Lib/site-packages"  "C:/Users/Juane Olivan/Documents/Eugenialazaro.com/pythonProject/src/main.py"
+
+
 import PySimpleGUI as sg
 import os.path
 import ImageResizer as ir
@@ -6,7 +10,20 @@ def Warning (msg):
     sg.Popup(msg, keep_on_top=True)
 
 if __name__ == '__main__':
-    file_list_column = [
+
+    layout0 = [
+        [
+            sg.Text("SELECCIONE OPCIÓN", pad = (75, 4)),
+        ],
+        [
+            sg.Button("Resize Images", pad = (100, 4)),
+        ]
+    ]
+
+    listaFicherosColumna = [
+        [
+          sg.Button("Atrás"),
+        ],
         [
             sg.Text("Carpeta:"),
             sg.In(size=(90, 1), enable_events=True, key="-FOLDER1-"),
@@ -20,19 +37,35 @@ if __name__ == '__main__':
         [sg.Button('Convierte la carpeta completa'), ],
     ]
 
+    layout1 = [ [sg.Column(listaFicherosColumna),]]
+
     layout = [
         [
-            sg.Column(file_list_column),
+            sg.Column(layout0, key='-LAYOUT0-'),
+            sg.Column(layout1, visible=False, key='-LAYOUT1-'),
         ]
     ]
 
-    window = sg.Window("Prepararador de imagenes BIG/SMALL", layout,
-                       icon=r'C:\Users\Juane Olivan\Documents\Eugenialazaro.com\repositorioImagenes\sol.ico')
+    window = sg.Window("Eugenia Pintura - Subir Imagenes", layout,
+                       icon=r'C:\Users\Juane Olivan\Documents\Eugenialazaro.com\repositorioImagenes\sol.ico', size=(320, 200), location = (400,75))
 
+    layoutActual = "LAYOUT0"
     while True:
         event, values = window.read()
         if event == "Exit" or event == sg.WIN_CLOSED:
             break
+
+        if event == 'Resize Images':
+            window[f'-LAYOUT0-'].update(visible=False)
+            layoutActual = "LAYOUT1"
+            window.size = (700,500)
+            window[f'-LAYOUT1-'].update(visible=True)
+
+        elif event == "Atrás":
+            window[f'-'+layoutActual+'-'].update(visible=False)
+            layoutActual = "LAYOUT0"
+            window.size = (320, 200)
+            window[f'-LAYOUT0-'].update(visible=True)
 
         if event == "-FOLDER1-":
             folder = values["-FOLDER1-"]

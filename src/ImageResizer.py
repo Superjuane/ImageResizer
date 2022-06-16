@@ -16,6 +16,9 @@ def prepare(name):
     elif name.endswith(".gif"):
         name = name.rstrip(".gif")
         end = 4
+    elif name.endswith(".PNG"):
+        name = name.rstrip(".PNG")
+        end = 5
 
     return name, end;
 
@@ -25,6 +28,7 @@ def formatoEnd(end):
     elif end == 2: name += ".jpeg"
     elif end == 3: name += ".jpg"
     elif end == 4: name += ".gif"
+    elif end == 5: name += ".PNG"
     return name
 
 
@@ -49,6 +53,7 @@ def imageResizerFolder(path1, path2):
     images += glob.glob(path1 + "/" + "*.png")
     images += glob.glob(path1 + "/" + "*.gif")
     images += glob.glob(path1 + "/" + "*.jpeg")
+    images += glob.glob(path1 + "/" + "*.PNG")
 
     # for x in images:
     #     print(x)
