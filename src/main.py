@@ -31,7 +31,7 @@ if __name__ == '__main__':
         ],
         [
             sg.Listbox(
-                values=[], enable_events=True, size=(90, 20), key="-FILE LIST-"
+                values=[], enable_events=True, size=(800, 20), key="-FILE LIST-"
             )
         ],
         [sg.Button('Convierte la carpeta completa'), ],
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         if event == 'Resize Images':
             window[f'-LAYOUT0-'].update(visible=False)
             layoutActual = "LAYOUT1"
-            window.size = (700,500)
+            window.size = (800,500)
             window[f'-LAYOUT1-'].update(visible=True)
 
         elif event == "Atrás":
