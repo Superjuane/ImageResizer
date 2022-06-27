@@ -6,10 +6,44 @@ import PySimpleGUI as sg
 import os.path
 from PIL import Image, ImageTk
 import ImageResizer as ir
+import ImageHeaderPreparer as ip
 
 
 def Warning(msg):
     sg.Popup(msg, keep_on_top=True)
+
+def TitlePopUp():
+    result = "DEFAULT"
+    popUpColumn = [
+        [sg.Text("Introduzca un titulo para la imagen")],
+        [
+            sg.In(size=(60, 1), enable_events=True, key="-TITLE-"),
+        ],
+        [sg.Button("OK", key = "TitlePopUpOK")],
+        [sg.Button("CANCEL", key="TitlePopUpCANCEL")], #button_color=
+        [sg.Button("Sin Titulo", key="TitlePopUpNoTitle")],
+    ]
+    popUp = sg.Window("TITULO", popUpColumn, icon=r'C:\Users\Juane Olivan\Documents\Eugenialazaro.com\repositorioImagenes\sol.ico',size=(350, 200), location=(550, 75))
+
+    #while eventAux != "TitlePopUpOK" and eventAux != "TitlePopUpCANCEL" and eventAux != "TitlePopUpNoTitle":
+    PoppingUp = True
+    while PoppingUp:
+        eventAux, valuesAux = popUp.read()
+        if eventAux == "TitlePopUpCANCEL" or event == sg.WIN_CLOSED:
+            result = "CANCEL"
+            PoppingUp = False
+            break
+        elif eventAux == "TitlePopUpNoTitle":
+            result = "NOTITLE"
+            PoppingUp = False
+            break
+        elif eventAux == "TitlePopUpcOK":
+            result = valuesAux["-TITLE-"][0]
+            PoppingUp = False
+            break
+
+    popUp.close()
+    return result
 
 
 if __name__ == '__main__':
@@ -71,11 +105,19 @@ if __name__ == '__main__':
                 values=[], enable_events=True, size=(70, 20), key="-FILE LIST2-"
             )
         ],
-
+        [sg.Button('Sube la imagen'), ],
     ]
 
-    layout2 = [[sg.Column(headerPreparerColumn)]]
+    image_viewer_column2 = [
 
+        [sg.Text(size=(20, 1), key="-TEXT2-")],
+        [sg.Image(key="-IMAGE2-")],
+    ]
+
+    layout2 = [[sg.Column(headerPreparerColumn),
+                sg.VSeperator(),
+                sg.Column(image_viewer_column2),
+                ]]
     layout = [
         [
             sg.Column(layout0, key='-LAYOUT0-'),
@@ -106,8 +148,8 @@ if __name__ == '__main__':
         if event == "SUBIR IMAGEN DIRECTAMENTE":
             window[f'-LAYOUT0-'].update(visible=False)
             layoutActual = "LAYOUT2"
-            window.move(350, 75)
-            window.size = (800, 500)
+            window.move(75, 75)
+            window.size = (1200, 500)
             window[f'-LAYOUT2-'].update(visible=True)
 
         elif event == "Atrás":
@@ -115,6 +157,7 @@ if __name__ == '__main__':
             layoutActual = "LAYOUT0"
             window.move(550, 75)
             window.size = (350, 200)
+            selected = False
             window[f'-LAYOUT0-'].update(visible=True)
 
         elif event == "Atras":
@@ -122,6 +165,7 @@ if __name__ == '__main__':
             layoutActual = "LAYOUT0"
             window.move(550, 75)
             window.size = (350, 200)
+            selected = False
             window[f'-LAYOUT0-'].update(visible=True)
 
         if event == "-FOLDER1-":
@@ -196,5 +240,39 @@ if __name__ == '__main__':
 
             except:
                 pass
+        elif event == "-FILE LIST2-":  # A file was chosen from the listbox
+            selected = True
+            try:
+                folder = values["-FOLDER2-"]
+                filename = os.path.join(values["-FOLDER2-"], values["-FILE LIST2-"][0])
+                image = Image.open(filename)  # I prefer /
+                image.thumbnail((500, 500))
+                window["-IMAGE2-"].update(
+                    data=ImageTk.PhotoImage(image)
+                )
+
+            except:
+                pass
+
+        if event == 'Sube la imagen':
+            if not selected:
+                Warning("Nada seleccionado")
+            else:
+                clicked = sg.PopupOKCancel("Quieres subir la imagen " + values["-FILE LIST2-"][0])
+                if clicked == 'OK':
+                    title = TitlePopUp()
+                    if title == "CANCEL":
+                        Warning("CANCELED")
+                    elif title == "NOTITLE": title = values["-FILE LIST2-"][0]
+                    else:
+                        try:
+                            header = ip.headerBuilder(values["-FILE LIST2-"][0], title)
+                            print(header)
+                        except NameError:
+                            Warning("Error: No se ha seleccionado ninguna foto a convertir")
+                elif clicked == 'Cancel':
+                    pass
+                elif clicked == None:
+                    pass
 
     window.close()

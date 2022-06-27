@@ -62,7 +62,7 @@ def headerBuilder(name, titulo):
     result += "\n\t\t</div>"
     result += "\n\t</div>"
     result += "\n</div>"
-    print(result)
+    print( result)
 
 if __name__ == '__main__':
     headerBuilder("bandeja-2.jpeg", "Hadita")
